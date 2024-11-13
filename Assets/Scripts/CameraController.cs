@@ -4,29 +4,29 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-	private const float YMin = -50.0f;
-	private const float YMax = 50.0f;
+    public float sensX;
+    public float sensY;
+    public Transform orientation;
 
-	public Transform lookAt;
+    private float xRotation;
+    private float yRotation;
 
-	public Transform Player;
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
-	public float distance = 10.0f;
-	private float currentX = 0.0f;
-	private float currentY = 0.0f;
-	public float sensivity = 4.0f;
+    void Update()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * sensX * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * sensY * Time.deltaTime;
 
-	void LateUpdate()
-	{
-		currentX += Input.GetAxis("Mouse X") * sensivity * Time.deltaTime;
-		currentY += Input.GetAxis("Mouse Y") * sensivity * Time.deltaTime;
+        xRotation -= mouseY;
+        yRotation += mouseX;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-		currentY = Mathf.Clamp(currentY, YMin, YMax);
-
-		Vector3 Direction = new Vector3(0, 0, -distance);
-		Quaternion rotation = Quaternion.Euler(currentY, currentX, 0);
-		transform.position = lookAt.position + rotation * Direction;
-
-		transform.LookAt(lookAt.position);
-	}
+        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        orientation.rotation = Quaternion.Euler(0f, yRotation, 0f);
+    }
 }
