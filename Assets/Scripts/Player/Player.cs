@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
     [SerializeField] float walkSpeed;
     [SerializeField] float sprintSpeed;
     [SerializeField] float airSpeed; // air movement might add a nice feel to the game?
+    [SerializeField] float targetAirSpeed;
+
+
     public float moveSpeed;
     public float groundDrag;
 
@@ -121,10 +124,9 @@ public class Player : MonoBehaviour
         // Mode - Air 
         else // if player is not grounded and not pressing sprint set state to air
         {
-           //##################################################################################################work in progres############################################################################
             state = MovementState.air;
-            // moveSpeed = Mathf.Lerp(moveSpeed, targetAirSpeed, Time.deltaTime * 3f);
-            // moveSpeed = airSpeed;
+            moveSpeed = Mathf.Lerp(moveSpeed, targetAirSpeed, Time.deltaTime * 3f);
+            moveSpeed = airSpeed;
         }
 
         //Field of view
