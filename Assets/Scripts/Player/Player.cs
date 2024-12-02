@@ -58,7 +58,7 @@ public class Player : MonoBehaviour
         
         readyToJump = true;
     }
-
+        [Obsolete]
     void Update() {
 
         SpeedControl();
@@ -67,11 +67,11 @@ public class Player : MonoBehaviour
         //Ground check
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
 
-        //handle drag
-        if (grounded) 
+         // handle drag
+        if (grounded)
             rb.linearDamping = groundDrag;
         else
-            rb.linearDamping = 0;
+            rb.drag = 0;
 
         Console.WriteLine("Grounded: " + grounded);
         Console.WriteLine("not Grounded: " + !grounded);
@@ -152,24 +152,22 @@ public class Player : MonoBehaviour
           
     }
 
-    [Obsolete]
     protected void SpeedControl() {   
         // limiting speed on ground or air
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
         // limit velocity if needed
         if (flatVel.magnitude > moveSpeed)
         {
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
         }
     }
 
-     [Obsolete]
     protected void Jump() {
-        Vector3 vel = rb.velocity;
+        Vector3 vel = rb.linearVelocity;
         vel.y = 0;
-        rb.velocity = vel;
+        rb.linearVelocity = vel;
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
 
