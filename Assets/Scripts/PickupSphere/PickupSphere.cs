@@ -12,4 +12,9 @@ public class PickupSphere : MonoBehaviour
     {
 
     }
+
+    public void DestroySelf()
+    {
+        Destroy(this.gameObject);
+    }
 }

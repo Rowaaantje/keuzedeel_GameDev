@@ -4,7 +4,7 @@ using System.Dynamic;
 using Unity.VisualScripting;
 using Unity.Mathematics;
 
-public class Player : MonoBehaviour
+public class Movement : MonoBehaviour
 {
 
     [Header("Move")]
@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
     [Header("Ground Check")]
     [SerializeField] public Transform groundCheck;
     [SerializeField] public float groundDistance = 0.2f;
-    
+
     public float playerHeight;
     public LayerMask whatIsGround;
     public bool grounded;
@@ -55,10 +55,10 @@ public class Player : MonoBehaviour
     public void Start() {
 
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true; //freeze x y 
-            
+        rb.freezeRotation = true; //freeze x y
+
         baseFov = normalCam.fieldOfView; //sets the baseFov to the normalCam fieldOfView from the Camera
-        
+
         readyToJump = true;
     }
         [Obsolete]
@@ -100,28 +100,28 @@ public class Player : MonoBehaviour
 
             Jump();
 
-            Invoke(nameof(ResetJump), jumpCooldown);        
+            Invoke(nameof(ResetJump), jumpCooldown);
         }
     }
 
      protected void StateHandler()
-    {   
-       
-       
-        if (grounded && Input.GetKey(sprintKey) && verticalInput > 0)  
+    {
+
+
+        if (grounded && Input.GetKey(sprintKey) && verticalInput > 0)
         {
             state = MovementState.sprinting;
             moveSpeed = sprintSpeed;
         }
 
-        // Mode - walking 
+        // Mode - walking
         else if (grounded) //if player is grounded but not pressing sprint set state to walkSpeed
         {
             state = MovementState.walking;
             moveSpeed = walkSpeed;
         }
 
-        // Mode - Air 
+        // Mode - Air
         else // if player is not grounded and not pressing sprint set state to air
         {
             state = MovementState.air;
@@ -151,10 +151,10 @@ public class Player : MonoBehaviour
         else if(!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force); //moveDirection.normalized
 
-          
+
     }
 
-    protected void SpeedControl() {   
+    protected void SpeedControl() {
         // limiting speed on ground or air
         Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 

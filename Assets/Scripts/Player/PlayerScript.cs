@@ -4,9 +4,7 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
     public Transform gunHolder;
-    public List<HoldableObject> inventory; // inventory only holds guns
-    public Collider TriggerCollider;
-
+    public List<HoldableObject> inventory; // inventory only holds gun
     void Start()
     {
         inventory = new List<HoldableObject>(); // initialise the list
@@ -14,7 +12,9 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
-        TriggerCollider.transform.position = transform.position;
+        if (inventory.Count < 1) { return; }
+
+        inventory[0].transform.position = gunHolder.position;
     }
 
     public void MoveInventory(List<HoldableObject> list, int oldIndex, int newIndex)
@@ -32,15 +32,18 @@ public class PlayerScript : MonoBehaviour
 
     public void OnTriggerEnter(Collider collider)
     {
-        print("triggerd");
         if (!collider.CompareTag("GunHolder")) { return; } // inverse if-statement to save indentation
 
         PickupSphere pickupSphere = collider.GetComponent<PickupSphere>();
 
         if (pickupSphere != null && pickupSphere.itemInSphere != null)
         {
-            AddToInventory(pickupSphere.itemInSphere);
+            HoldableObject item = pickupSphere.itemInSphere;
+            AddToInventory(item);
             pickupSphere.itemInSphere = null; // Clear the item from the sphere after picking it up
+            item.transform.SetParent(gunHolder); // Detach the item from the PickupSphere
         }
+
+        pickupSphere.DestroySelf();
     }
 }
