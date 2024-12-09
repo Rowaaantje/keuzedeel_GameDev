@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
     [SerializeField] float walkSpeed;
     [SerializeField] float sprintSpeed;
 
+
+    public float speedTransitionRate = 2f;
+    public float fovTransitionRate = 8f;
     public float moveSpeed;
     public float groundDrag;
 
@@ -107,19 +110,27 @@ public class Player : MonoBehaviour
         if (Input.GetKey(sprintKey) && verticalInput > 0)
         {
             state = MovementState.sprinting;
+            // Smoothly increase speed from walkSpeed to sprintSpeed
+            moveSpeed = Mathf.MoveTowards(moveSpeed, sprintSpeed, Time.deltaTime * speedTransitionRate);
         }
         else if (grounded)
         {
             state = MovementState.walking;
+            moveSpeed = walkSpeed;
         }
         else
         {
             state = MovementState.air;
         }
 
+        adjustFOV();
+    }
+
+    private void adjustFOV()
+    {
         //Field of view
-        if (state == MovementState.sprinting) { normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, baseFov * sprintFovModifier, Time.deltaTime * 8f); }
-        else { normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, baseFov, Time.deltaTime * 9f); }
+        if (state == MovementState.sprinting) { normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, baseFov * sprintFovModifier, Time.deltaTime * fovTransitionRate); }
+        else { normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, baseFov, Time.deltaTime * fovTransitionRate); }
     }
 
     protected void Gravity()
