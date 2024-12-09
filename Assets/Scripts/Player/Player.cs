@@ -51,6 +51,11 @@ public class Player : MonoBehaviour
 
     public MovementState state; // always stores the current state the player is in
 
+    public enum MovementState {
+        walking,
+        sprinting,
+        air
+    }
 
     public void Start() {
 
@@ -61,7 +66,6 @@ public class Player : MonoBehaviour
         
         readyToJump = true;
     }
-        [Obsolete]
     void Update() {
 
         SpeedControl();
@@ -83,12 +87,6 @@ public class Player : MonoBehaviour
     private void FixedUpdate(){
         MovePlayer();
         Gravity();
-    }
-
-    public enum MovementState {
-        walking,
-        sprinting,
-        air
     }
 
     protected void MyInput() {
