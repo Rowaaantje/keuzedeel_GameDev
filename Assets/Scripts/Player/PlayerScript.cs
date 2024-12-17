@@ -14,7 +14,14 @@ public class PlayerScript : MonoBehaviour
     {
         if (inventory.Count < 1) { return; }
 
-        inventory[0].transform.position = gunHolder.position;
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (i == 0) { continue; }
+
+            inventory[i].gameObject.SetActive(false);
+        }
+
+        inventory[0].gameObject.SetActive(true);
     }
 
     public void MoveInventory(List<HoldableObject> list, int oldIndex, int newIndex)
