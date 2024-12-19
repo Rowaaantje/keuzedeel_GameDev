@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
     public Transform gunHolder;
-    public List<HoldableObject> inventory; // inventory only holds gun
+    public List<HoldableObject> inventory;      // inventory only holds gun
+    public int itemHolding = 0;                 // first in index
     void Start()
     {
         inventory = new List<HoldableObject>(); // initialise the list
@@ -12,24 +14,7 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
-        if (inventory.Count < 1) { return; }
-
-        for (int i = 0; i < inventory.Count; i++)
-        {
-            if (i == 0) { continue; }
-
-            inventory[i].gameObject.SetActive(false);
-        }
-
-        inventory[0].gameObject.SetActive(true);
-    }
-
-    public void MoveInventory(List<HoldableObject> list, int oldIndex, int newIndex)
-    {
-        HoldableObject item = list[oldIndex];
-
-        list.RemoveAt(oldIndex);
-        list.Insert(newIndex, item);
+        RenderItemHeld();
     }
 
     public void AddToInventory(HoldableObject item)
@@ -39,7 +24,7 @@ public class PlayerScript : MonoBehaviour
 
     public void OnTriggerEnter(Collider collider)
     {
-        if (!collider.CompareTag("GunHolder")) { return; } // inverse if-statement to save indentation
+        if (!collider.CompareTag("GunHolder")) { return; }      // inverse if-statement to save indentation
 
         PickupSphere pickupSphere = collider.GetComponent<PickupSphere>();
 
@@ -47,10 +32,26 @@ public class PlayerScript : MonoBehaviour
         {
             HoldableObject item = pickupSphere.itemInSphere;
             AddToInventory(item);
-            pickupSphere.itemInSphere = null; // Clear the item from the sphere after picking it up
-            item.transform.SetParent(gunHolder); // Detach the item from the PickupSphere
+            pickupSphere.itemInSphere = null;                       // Clear the item from the sphere after picking it up
+            item.transform.SetParent(gunHolder);                 // Detach the item from the PickupSphere
         }
 
         pickupSphere.DestroySelf();
+    }
+
+    private void RenderItemHeld()
+    {
+        if (inventory.Count < 1) { return; }                                         // do nothing if inventory is empty
+
+        for (int i = 0; i < inventory.Count; i++)                                    // set all items invisible by default
+        {
+            inventory[i].gameObject.SetActive(false);
+        }
+
+        int scrollIncrement = (int)(10 * Input.GetAxis("Mouse Scroll"));    // Input.GetAxis returns 0.1 / -0.1 by default
+        itemHolding = itemHolding + scrollIncrement < 0f ? inventory.Count - 1 : itemHolding + scrollIncrement;
+        itemHolding %= inventory.Count;
+
+        inventory[itemHolding].gameObject.SetActive(true);              // render the item holding
     }
 }

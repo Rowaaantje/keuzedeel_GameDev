@@ -6,7 +6,7 @@ public class Gun : HoldableObject
     public int damage;
     public int fireRate;
     private float nextFire;
-    public Camera camera;
+    public new Camera camera;
 
     [Header("VFX")]
     public GameObject hitVFX;
@@ -24,11 +24,11 @@ public class Gun : HoldableObject
             Fire();
         }
     }
-    
+
     void Fire()
     {
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
-        
+
         RaycastHit  hit;
 
         if (Physics.Raycast(ray.origin, ray.direction, out hit, 100f))
