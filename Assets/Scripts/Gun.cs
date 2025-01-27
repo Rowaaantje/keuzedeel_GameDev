@@ -1,7 +1,11 @@
+using TMPro;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class Gun : MonoBehaviour
-{
+{   
+    PlayerScript playerScript;
+
     [Header("Gun Stats")]
     public int damage;
     public int rpm;
@@ -9,19 +13,25 @@ public class Gun : MonoBehaviour
 
     [Header("VFX")]
     public GameObject hitVFX;
+    [SerializeField] protected TextMeshProUGUI WeaponName;
+    [SerializeField] protected string currentName;
 
     public new Camera camera;
 
     private float fireRate; // Cooldown time between shots
     private float nextFireTime = 0f;
 
+   
     void Start()
     {
         fireRate = 60f / rpm; // Calculate time between shots
     }
 
     void Update()
-    {
+    {   
+        WeaponName.text = currentName.ToString();
+
+
         // Check for held mouse button (automatic fire)
         if (Input.GetMouseButton(0))
         {
