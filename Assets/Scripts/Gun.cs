@@ -25,6 +25,8 @@ public class Gun : MonoBehaviour
     void Start()
     {
         fireRate = 60f / rpm; // Calculate time between shots
+        WeaponName.fontSize = 4;
+        WeaponName.color = Color.white;
     }
 
     void Update()
