@@ -1,57 +1,60 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerScript : MonoBehaviour
 {
     public Transform gunHolder;
-    public List<HoldableObject> inventory;      // inventory only holds gun
-    public int itemHolding = 0;                 // first in index
+    public List<Gun> inventory;
+    public int itemHolding = 0;
+    private int lastHeldIndex = -1; // Track the last held item
+
     void Start()
     {
-        inventory = new List<HoldableObject>(); // initialise the list
+        Debug.Log($"{inventory.Count} items in inventory");
+        // Initialize the first gun
+        if (inventory.Count > 0)
+        {
+            inventory[itemHolding].gameObject.SetActive(true);
+            lastHeldIndex = itemHolding;
+        }
     }
 
     void Update()
     {
+        HandleScrollInput();
         RenderItemHeld();
     }
 
-    public void AddToInventory(HoldableObject item)
+    private void HandleScrollInput()
     {
-        inventory.Add(item);
-    }
-
-    public void OnTriggerEnter(Collider collider)
-    {
-        if (!collider.CompareTag("GunHolder")) { return; }      // inverse if-statement to save indentation
-
-        PickupSphere pickupSphere = collider.GetComponent<PickupSphere>();
-
-        if (pickupSphere != null && pickupSphere.itemInSphere != null)
+        float scroll = Input.GetAxis("Mouse Scroll");
+        if (scroll != 0)
         {
-            HoldableObject item = pickupSphere.itemInSphere;
-            AddToInventory(item);
-            pickupSphere.itemInSphere = null;                       // Clear the item from the sphere after picking it up
-            item.transform.SetParent(gunHolder);                 // Detach the item from the PickupSphere
-        }
+            int scrollIncrement = (int)(10 * scroll);
+            itemHolding += scrollIncrement;
 
-        pickupSphere.DestroySelf();
+            // Wrap around inventory indices
+            if (itemHolding < 0)
+                itemHolding = inventory.Count - 1;
+            else
+                itemHolding %= inventory.Count;
+        }
     }
 
     private void RenderItemHeld()
     {
-        if (inventory.Count < 1) { return; }                                         // do nothing if inventory is empty
+        if (inventory.Count < 1) return;
 
-        for (int i = 0; i < inventory.Count; i++)                                    // set all items invisible by default
+        // Only update if the held item has changed
+        if (lastHeldIndex != itemHolding)
         {
-            inventory[i].gameObject.SetActive(false);
+            // Deactivate the previous gun
+            if (lastHeldIndex >= 0 && lastHeldIndex < inventory.Count)
+                inventory[lastHeldIndex].gameObject.SetActive(false);
+
+            // Activate the new gun
+            inventory[itemHolding].gameObject.SetActive(true);
+            lastHeldIndex = itemHolding;
         }
-
-        int scrollIncrement = (int)(10 * Input.GetAxis("Mouse Scroll"));    // Input.GetAxis returns 0.1 / -0.1 by default
-        itemHolding = itemHolding + scrollIncrement < 0f ? inventory.Count - 1 : itemHolding + scrollIncrement;
-        itemHolding %= inventory.Count;
-
-        inventory[itemHolding].gameObject.SetActive(true);              // render the item holding
     }
 }
