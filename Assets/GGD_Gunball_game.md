@@ -55,7 +55,7 @@
 
 - Als speler wil ik een duidelijke interface hebben die mijn score en munitie toont zodat ik altijd op de hoogte ben van mijn status in het spel.
 
-### Visuals
+### Audiovisual
 
 - **De map**
 
@@ -71,7 +71,8 @@
 
 - **De wapens**
 
-    De wapens hebben hun eigen modellen en lijken op een generieke versie van wat ze horen te zijn.
+    De wapens hebben hun eigen modellen en lijken op een generieke versie van wat ze horen te zijn.<br>
+    Elk wapen heeft zijn eigen schiet en reload geluidseffect die afspeelt tijdens het schieten / herladen.
 
 ### Overige Informatie
 
