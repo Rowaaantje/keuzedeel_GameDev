@@ -18,11 +18,6 @@ public class Ball : MonoBehaviour
     void Update()
     {
         Points.text = $"Points:\n{_points}";
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            StartCoroutine(Respawn());
-        }
     }
 
     void OnTriggerEnter(Collider collider)
@@ -30,14 +25,12 @@ public class Ball : MonoBehaviour
         if (collider.CompareTag("Goal"))
         {
             _points++;
-            StartCoroutine(Respawn());
+            Respawn();
         }
     }
 
-    IEnumerator Respawn()
+    void Respawn()
     {
-        yield return new WaitForSeconds(0.5f);
-
         transform.position = _initialPosition;
         GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
     }
