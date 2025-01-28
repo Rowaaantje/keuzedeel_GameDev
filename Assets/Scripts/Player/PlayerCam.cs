@@ -7,8 +7,8 @@ public class PlayerCam : MonoBehaviour
 
    public Transform orientation; //stores the direction you are facing
 
-   float xRotation;
-   float yRotation;
+   private float _xRotation;
+   private float _yRotation;
 
     private void Start()
     {
@@ -20,23 +20,23 @@ public class PlayerCam : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        MyInput();
+        HandleMouseInput();
 
     }
-    void MyInput()
+    void HandleMouseInput()
     {
         //get mouse input
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
 
-        yRotation += mouseX; //add the x input to your y rotation
+        _yRotation += mouseX; //add the x input to your y rotation
 
-        xRotation -= mouseY; //substract y input from the x rotation
+        _xRotation -= mouseY; //substract y input from the x rotation
 
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); //max camera rotation in the x axis
+        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f); //max camera rotation in the x axis
 
         //rotate cam and orientation
-        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+        transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+        orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
     }
 }
