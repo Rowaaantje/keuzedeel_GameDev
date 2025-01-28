@@ -33,10 +33,10 @@ public class PlayerScript : MonoBehaviour
     private void HandleScrollInput()
     {
         float scroll = Input.GetAxis("Mouse Scroll");
-        if (scroll != 0)
+        if (scroll != 0) // User is scrolling
         {
-            int scrollIncrement = (int)(10 * scroll);
-            itemHolding += scrollIncrement;
+            int scrollIncrement = (int)(10 * scroll); // Scroll inputs are 0.1 or -0.1, we multiply by 10 to get an integer value
+            itemHolding += scrollIncrement; // Index of inventory
 
             // Wrap around inventory indices
             if (itemHolding < 0)
