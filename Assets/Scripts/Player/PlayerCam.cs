@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class PlayerCam : MonoBehaviour
 {
-   public float sensX;
-   public float sensY;
+    public float sensX;
+    public float sensY;
 
-   public Transform orientation; //stores the direction you are facing
+    public Transform orientation; //stores the direction you are facing
 
-   private float _xRotation;
-   private float _yRotation;
+    private float _xRotation;
+    private float _yRotation;
 
     private void Start()
     {
@@ -23,6 +23,15 @@ public class PlayerCam : MonoBehaviour
         HandleMouseInput();
 
     }
+
+    void OnGUI()
+    {
+        float crosshairSize = 5f;
+        float xMin = (Screen.width / 2) - (crosshairSize / 2);
+        float yMin = (Screen.height / 2) - (crosshairSize / 2);
+        GUI.DrawTexture(new Rect(xMin, yMin, crosshairSize, crosshairSize), Texture2D.whiteTexture);
+    }
+
     void HandleMouseInput()
     {
         //get mouse input

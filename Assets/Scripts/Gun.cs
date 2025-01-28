@@ -81,6 +81,13 @@ public class Gun : MonoBehaviour
 
         if (Physics.Raycast(ray.origin, ray.direction, out hit, 1000f))
         {
+            // Spawn a small red circle at the hit point for debugging
+            GameObject debugCircle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            debugCircle.transform.position = hit.point;
+            debugCircle.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            debugCircle.GetComponent<Renderer>().material.color = Color.red;
+            Destroy(debugCircle, 1f);
+
             // Spawn particles at hit point
             if (hitVFX != null)
             {
