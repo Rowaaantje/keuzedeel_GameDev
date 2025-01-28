@@ -1,9 +1,5 @@
 using UnityEngine;
 using System;
-using System.Dynamic;
-using Unity.VisualScripting;
-using Unity.Mathematics;
-using UnityEditor.Experimental.GraphView;
 
 public class Movement : MonoBehaviour
 {
