@@ -28,6 +28,11 @@ public class PlayerScript : MonoBehaviour
     {
         HandleScrollInput();
         RenderItemHeld();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
     private void HandleScrollInput()
