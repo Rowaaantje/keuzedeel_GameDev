@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class AutoDestroy : MonoBehaviour
 {
-    [SerializeField] private float lifetime = 0.5f;
+    [SerializeField] private float _lifetime = 0.5f;
 
     void Start()
     {
-        Destroy(gameObject, lifetime);
+        Destroy(gameObject, _lifetime);
     }
 }

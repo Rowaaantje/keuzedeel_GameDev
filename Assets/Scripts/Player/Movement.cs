@@ -8,10 +8,10 @@ public class Movement : MonoBehaviour
 {
 
     [Header("Move")]
-    [SerializeField] float walkSpeed;
-    [SerializeField] float sprintSpeed;
-    [SerializeField] float airSpeed; // air movement might add a nice feel to the game?
-    [SerializeField] float targetAirSpeed;
+    public float walkSpeed;
+    public float sprintSpeed;
+    public float airSpeed; // air movement might add a nice feel to the game?
+    public float targetAirSpeed;
 
 
     public float moveSpeed;
@@ -28,8 +28,8 @@ public class Movement : MonoBehaviour
     public KeyCode sprintKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
-    [SerializeField] public Transform groundCheck;
-    [SerializeField] public float groundDistance = 0.2f;
+    public Transform groundCheck;
+    public float groundDistance = 0.2f;
 
     public float playerHeight;
     public LayerMask whatIsGround;
@@ -52,7 +52,8 @@ public class Movement : MonoBehaviour
     public MovementState state; // always stores the current state the player is in
 
 
-    public void Start() {
+    public void Start()
+    {
 
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; //freeze x y
@@ -61,41 +62,51 @@ public class Movement : MonoBehaviour
 
         readyToJump = true;
     }
-        [Obsolete]
-    void Update() {
+
+    void Update()
+    {
 
         SpeedControl();
         StateHandler();
         MyInput();
+
         //Ground check
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
 
-         // handle drag
+        // handle drag
         if (grounded)
+        {
             rb.linearDamping = groundDrag;
+        }
         else
-            rb.drag = 0;
+        {
+            rb.linearDamping = 0;
+        }
 
         Console.WriteLine("Grounded: " + grounded);
         Console.WriteLine("not Grounded: " + !grounded);
     }
 
-    private void FixedUpdate(){
+    private void FixedUpdate()
+    {
         MovePlayer();
         Gravity();
     }
 
-    public enum MovementState {
+    public enum MovementState
+    {
         walking,
         sprinting,
         air
     }
 
-    protected void MyInput() {
+    protected void MyInput()
+    {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if(Input.GetKey(jumpKey) && readyToJump && grounded) {
+        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        {
             readyToJump = false;
 
             Jump();
@@ -104,10 +115,8 @@ public class Movement : MonoBehaviour
         }
     }
 
-     protected void StateHandler()
+    protected void StateHandler()
     {
-
-
         if (grounded && Input.GetKey(sprintKey) && verticalInput > 0)
         {
             state = MovementState.sprinting;
@@ -130,11 +139,18 @@ public class Movement : MonoBehaviour
         }
 
         //Field of view
-        if(state == MovementState.sprinting) { normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, baseFov * sprintFovModifier, Time.deltaTime * 8f); }
-        else {normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, baseFov, Time.deltaTime * 8f); }
+        if (state == MovementState.sprinting)
+        {
+            normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, baseFov * sprintFovModifier, Time.deltaTime * 8f);
+        }
+        else
+        {
+            normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, baseFov, Time.deltaTime * 8f);
+        }
     }
 
-    protected void Gravity() {
+    protected void Gravity()
+    {
         rb.AddForce(0, gravity, 0);
     }
 
@@ -144,17 +160,18 @@ public class Movement : MonoBehaviour
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         // on ground
-        if(grounded)
+        if (grounded)
+        {
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force); //moveDirection.normalized
-
-        // in air
-        else if(!grounded)
+        }
+        else // in air
+        {
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force); //moveDirection.normalized
-
-
+        }
     }
 
-    protected void SpeedControl() {
+    protected void SpeedControl()
+    {
         // limiting speed on ground or air
         Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
@@ -166,7 +183,8 @@ public class Movement : MonoBehaviour
         }
     }
 
-    protected void Jump() {
+    protected void Jump()
+    {
         Vector3 vel = rb.linearVelocity;
         vel.y = 0;
         rb.linearVelocity = vel;
@@ -177,5 +195,4 @@ public class Movement : MonoBehaviour
     {
         readyToJump = true;
     }
-
 }

@@ -1178,7 +1178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  rpm: 750
+  rpm: 500
   dmgMultiplier: 2
   maxAmmo: 16
   reloadSpeed: 1.3
@@ -1390,6 +1390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9038f4a2f801440baa70456c096ee5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Points: {fileID: 757542176}
 --- !u!1 &1308378769
 GameObject:
   m_ObjectHideFlags: 0

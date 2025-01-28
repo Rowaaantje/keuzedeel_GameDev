@@ -8,8 +8,8 @@ public class CameraController : MonoBehaviour
     public float sensY;
     public Transform orientation;
 
-    private float xRotation;
-    private float yRotation;
+    private float _xRotation;
+    private float _yRotation;
 
     void Start()
     {
@@ -22,11 +22,11 @@ public class CameraController : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * sensX * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * sensY * Time.deltaTime;
 
-        xRotation -= mouseY;
-        yRotation += mouseX;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        _xRotation -= mouseY;
+        _yRotation += mouseX;
+        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
 
-        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        orientation.rotation = Quaternion.Euler(0f, yRotation, 0f);
+        transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0f);
+        orientation.rotation = Quaternion.Euler(0f, _yRotation, 0f);
     }
 }

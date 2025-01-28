@@ -14,6 +14,7 @@ public class Gun : MonoBehaviour
     public int maxAmmo;
     public float reloadSpeed;
     private int _currentAmmo;
+    private bool _reloading = false;
 
     [Header("VFX")]
     public GameObject hitVFX;
@@ -64,7 +65,7 @@ public class Gun : MonoBehaviour
 
     void Fire()
     {
-        if (_currentAmmo == 0) { return; }
+        if (_currentAmmo == 0 || _reloading) { return; }
 
         _currentAmmo--;
 
@@ -99,11 +100,13 @@ public class Gun : MonoBehaviour
 
     IEnumerator Reload()
     {
+        _reloading = true;
         ReloadingText.text = "Reloading...";
 
         yield return new WaitForSeconds(reloadSpeed);
         _currentAmmo = maxAmmo;
 
         ReloadingText.text = "";
+        _reloading = false;
     }
 }
