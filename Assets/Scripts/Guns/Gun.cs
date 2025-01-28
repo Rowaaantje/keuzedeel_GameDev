@@ -16,6 +16,7 @@ public abstract class Gun : MonoBehaviour // Can not initiate Gun class, has to 
     [Header("VFX")]
     public GameObject hitVFX;
     public AudioClip shotSound;
+    public AudioClip reloadSound;
 
     [SerializeField] protected TextMeshProUGUI WeaponName;
     [SerializeField] protected TextMeshProUGUI AmmoText;
@@ -113,6 +114,7 @@ public abstract class Gun : MonoBehaviour // Can not initiate Gun class, has to 
         Reloading = true;
         ReloadingText.text = "Reloading...";
 
+        AudioSource.PlayClipAtPoint(reloadSound, transform.position);
         yield return new WaitForSeconds(reloadSpeed);
         CurrentAmmo = maxAmmo;
 

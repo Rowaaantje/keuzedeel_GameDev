@@ -3,6 +3,7 @@ using System;
 using System.Dynamic;
 using Unity.VisualScripting;
 using Unity.Mathematics;
+using UnityEditor.Experimental.GraphView;
 
 public class Movement : MonoBehaviour
 {
@@ -67,7 +68,8 @@ public class Movement : MonoBehaviour
     {
         SpeedControl();
         StateHandler();
-        MyInput();
+        ProcessJumpInput();
+        Zoom();
 
         //Ground check
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
@@ -99,7 +101,7 @@ public class Movement : MonoBehaviour
         air
     }
 
-    protected void MyInput()
+    protected void ProcessJumpInput()
     {
         HorizontalInput = Input.GetAxisRaw("Horizontal");
         VerticalInput = Input.GetAxisRaw("Vertical");
@@ -193,5 +195,24 @@ public class Movement : MonoBehaviour
     protected void ResetJump()
     {
         readyToJump = true;
+    }
+
+    protected void Zoom()
+    {
+        if (Input.GetMouseButton(1))
+        {
+            normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, BaseFov / 5f, Time.deltaTime * 1f);
+        }
+        else
+        {
+            if (state == MovementState.sprinting)
+            {
+                normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, BaseFov * SprintFovModifier, Time.deltaTime * 1f);
+            }
+            else
+            {
+                normalCam.fieldOfView = Mathf.Lerp(normalCam.fieldOfView, BaseFov, Time.deltaTime * 1f);
+            }
+        }
     }
 }
