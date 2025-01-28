@@ -18,6 +18,11 @@ public class Ball : MonoBehaviour
     void Update()
     {
         Points.text = $"Points:\n{_points}";
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            StartCoroutine(Respawn());
+        }
     }
 
     void OnTriggerEnter(Collider collider)

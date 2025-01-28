@@ -1,20 +1,17 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
-public class Gun : MonoBehaviour
+public abstract class Gun : MonoBehaviour // Can not initiate Gun class, has to be inherited.
 {
-    PlayerScript playerScript;
-
     [Header("Gun Stats")]
     public int damage;
     public int rpm;
     public float dmgMultiplier; // The lower, the more damage
     public int maxAmmo;
     public float reloadSpeed;
-    private int _currentAmmo;
-    private bool _reloading = false;
+    protected int CurrentAmmo;
+    protected bool Reloading = false;
 
     [Header("VFX")]
     public GameObject hitVFX;
@@ -35,23 +32,23 @@ public class Gun : MonoBehaviour
     {
         fireRate = 60f / rpm; // Calculate time between shots
 
-        _currentAmmo = maxAmmo;
+        CurrentAmmo = maxAmmo;
 
         WeaponName.fontSize = 4;
         WeaponName.color = Color.white;
 
-        AmmoText.text = $"{_currentAmmo} / inf";
+        AmmoText.text = $"{CurrentAmmo} / inf";
     }
 
     void Update()
     {
         WeaponName.text = CurrentName.ToString();
-        AmmoText.text = $"{_currentAmmo} / inf";
+        AmmoText.text = $"{CurrentAmmo} / inf";
 
         // Check for held mouse button (automatic fire)
         if (Input.GetMouseButton(0))
         {
-            if (Time.time >= nextFireTime && _currentAmmo != 0)
+            if (Time.time >= nextFireTime && CurrentAmmo != 0)
             {
                 Fire();
                 nextFireTime = Time.time + fireRate; // Update cooldown
@@ -64,11 +61,11 @@ public class Gun : MonoBehaviour
         }
     }
 
-    void Fire()
+    public virtual void Fire() // Method can be overwritten but has a default definition that works for most guns
     {
-        if (_currentAmmo == 0 || _reloading) { return; }
+        if (CurrentAmmo == 0 || Reloading) { return; }
 
-        _currentAmmo--;
+        CurrentAmmo--;
 
         if (shotSound != null)
         {
@@ -113,13 +110,13 @@ public class Gun : MonoBehaviour
 
     IEnumerator Reload()
     {
-        _reloading = true;
+        Reloading = true;
         ReloadingText.text = "Reloading...";
 
         yield return new WaitForSeconds(reloadSpeed);
-        _currentAmmo = maxAmmo;
+        CurrentAmmo = maxAmmo;
 
         ReloadingText.text = "";
-        _reloading = false;
+        Reloading = false;
     }
 }
