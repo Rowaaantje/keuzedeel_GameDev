@@ -1,38 +1,50 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class Gun : MonoBehaviour
-{   
+{
     PlayerScript playerScript;
 
     [Header("Gun Stats")]
     public int damage;
     public int rpm;
     public float dmgMultiplier; // The lower, the more damage
+    public int maxAmmo;
+    public float reloadSpeed;
+    private int _currentAmmo;
 
     [Header("VFX")]
     public GameObject hitVFX;
+
     [SerializeField] protected TextMeshProUGUI WeaponName;
-    [SerializeField] protected string currentName;
+    [SerializeField] protected TextMeshProUGUI AmmoText;
+    [SerializeField] protected TextMeshProUGUI ReloadingText;
+    [SerializeField] protected string CurrentName;
 
     public new Camera camera;
 
     private float fireRate; // Cooldown time between shots
     private float nextFireTime = 0f;
 
-   
+
     void Start()
     {
         fireRate = 60f / rpm; // Calculate time between shots
+
+        _currentAmmo = maxAmmo;
+
         WeaponName.fontSize = 4;
         WeaponName.color = Color.white;
+
+        AmmoText.text = $"{_currentAmmo} / inf";
     }
 
     void Update()
-    {   
-        WeaponName.text = currentName.ToString();
-
+    {
+        WeaponName.text = CurrentName.ToString();
+        AmmoText.text = $"{_currentAmmo} / inf";
 
         // Check for held mouse button (automatic fire)
         if (Input.GetMouseButton(0))
@@ -43,10 +55,19 @@ public class Gun : MonoBehaviour
                 nextFireTime = Time.time + fireRate; // Update cooldown
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            StartCoroutine(Reload());
+        }
     }
 
     void Fire()
     {
+        if (_currentAmmo == 0) { return; }
+
+        _currentAmmo--;
+
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
 
         RaycastHit hit;
@@ -74,5 +95,15 @@ public class Gun : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator Reload()
+    {
+        ReloadingText.text = "Reloading...";
+
+        yield return new WaitForSeconds(reloadSpeed);
+        _currentAmmo = maxAmmo;
+
+        ReloadingText.text = "";
     }
 }
