@@ -18,6 +18,7 @@ public class Gun : MonoBehaviour
 
     [Header("VFX")]
     public GameObject hitVFX;
+    public AudioClip shotSound;
 
     [SerializeField] protected TextMeshProUGUI WeaponName;
     [SerializeField] protected TextMeshProUGUI AmmoText;
@@ -50,7 +51,7 @@ public class Gun : MonoBehaviour
         // Check for held mouse button (automatic fire)
         if (Input.GetMouseButton(0))
         {
-            if (Time.time >= nextFireTime)
+            if (Time.time >= nextFireTime && _currentAmmo != 0)
             {
                 Fire();
                 nextFireTime = Time.time + fireRate; // Update cooldown
@@ -68,6 +69,11 @@ public class Gun : MonoBehaviour
         if (_currentAmmo == 0 || _reloading) { return; }
 
         _currentAmmo--;
+
+        if (shotSound != null)
+        {
+            AudioSource.PlayClipAtPoint(shotSound, transform.position);
+        }
 
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
 
